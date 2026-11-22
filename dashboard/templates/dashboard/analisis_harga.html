@@ -1,0 +1,151 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Analisis Harga Kos{% endblock %}
+
+{% block extra_css %}
+<style>
+    .judul { margin-bottom: 20px; }
+    .judul h2 { color: #be185d; margin-bottom: 6px; }
+    .judul p { color: #64748b; }
+
+    .ringkasan {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 25px;
+    }
+
+    .card {
+        background: white;
+        padding: 22px;
+        border-radius: 12px;
+        border: 1px solid #fbcfe8;
+        min-width: 0;
+    }
+
+    .card h6 {
+        font-size: var(--fs-xs);
+        font-weight: 500;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        margin-bottom: 10px;
+    }
+
+    .card .angka {
+    font-size: clamp(20px, 2.1vw, var(--fs-xl));
+    font-weight: 800;
+    color: #be185d;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    line-height: 1.2;
+    }
+
+    .card .angka .rp {
+    font-size: .6em;
+    font-weight: 700;
+    margin-right: 2px;
+    opacity: .85;
+    }
+
+    .card h4 { margin-bottom: 15px; }
+
+    @media (max-width: 900px) {
+        .ringkasan { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 550px) {
+        .ringkasan { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="judul">
+    <h2>Analisis Harga Kos</h2>
+    <p>Halaman untuk melihat perbandingan harga kos di Madiun.</p>
+</div>
+
+<!-- Kartu Informasi -->
+<div class="ringkasan">
+
+    <div class="card">
+        <h6>Jumlah Kos</h6>
+        <p class="angka">{{ jumlah_kos }}</p>
+    </div>
+
+    <div class="card">
+        <h6>Rata-rata Harga</h6>
+        <p class="angka"><span class="rp">Rp</span> {{ rata_rata|floatformat:"0g" }}</p>
+    </div>
+
+    <div class="card">
+        <h6>Harga Termurah</h6>
+        <p class="angka"><span class="rp">Rp</span> {{ harga_termurah|floatformat:"0g" }}</p>
+    </div>
+
+    <div class="card">
+        <h6>Harga Termahal</h6>
+        <p class="angka"><span class="rp">Rp</span> {{ harga_termahal|floatformat:"0g" }}</p>
+    </div>
+
+</div>
+
+<!-- Grafik Harga -->
+<div class="card">
+    <h4>Grafik Perbandingan Harga Kos</h4>
+    <canvas id="grafikHarga"></canvas>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const namaKos = {{ nama_kos|safe }};
+    const hargaKos = {{ harga_kos|safe }};
+
+    const ctx = document.getElementById("grafikHarga");
+
+    Chart.defaults.font.family = "'Plus Jakarta Sans', system-ui, sans-serif";
+
+    new Chart(ctx, {
+        type: "bar",
+
+        data: {
+            labels: namaKos,
+
+            datasets: [{
+                label: "Harga Kos (Rupiah)",
+                data: hargaKos,
+                backgroundColor: "#ec4899"
+            }]
+        },
+
+        options: {
+            responsive: true,
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: (v) => "Rp " + v.toLocaleString("id-ID")
+                    }
+                }
+            },
+
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => "Rp " + ctx.parsed.y.toLocaleString("id-ID")
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

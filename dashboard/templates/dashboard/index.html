@@ -1,0 +1,409 @@
+
+{% extends "dashboard/base.html" %}
+
+{% block title %}Dashboard - KosMadiun{% endblock %}
+
+{% block extra_css %}
+<style>
+    .welcome {
+        background: linear-gradient(120deg, #ec4899, #2563eb);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 25px;
+    }
+
+    .welcome h1 {
+        font-size: 27px;
+        margin-bottom: 10px;
+    }
+
+    .welcome p {
+        color: #fce7f3;
+        line-height: 1.6;
+    }
+
+    .ringkasan {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 25px;
+    }
+
+    .card {
+        background: white;
+        padding: 22px;
+        border-radius: 12px;
+        border: 1px solid #fbcfe8;
+        min-width: 0;
+    }
+
+    .card .ikon {
+        font-size: 25px;
+        margin-bottom: 15px;
+    }
+
+    .card h3 {
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: 10px;
+    }
+
+    .card .angka {
+    font-size: clamp(20px, 2.1vw, var(--fs-xl));
+    font-weight: 800;
+    color: #be185d;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    line-height: 1.2;
+    }
+
+    .card .angka .rp {
+    font-size: .6em;
+    font-weight: 700;
+    margin-right: 2px;
+    opacity: .85;
+    }
+
+    .fitur {
+        margin-top: 30px;
+    }
+
+    .fitur h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .fitur-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+
+    .fitur-card {
+        background: white;
+        padding: 22px;
+        border-radius: 12px;
+        border: 1px solid #fbcfe8;
+        text-decoration: none;
+        color: #1e293b;
+        transition: 0.2s;
+    }
+
+    .fitur-card:hover {
+        border-color: #2563eb;
+        transform: translateY(-3px);
+    }
+
+    .fitur-card .ikon {
+        font-size: 27px;
+        margin-bottom: 13px;
+    }
+
+    .fitur-card h3 {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .fitur-card p {
+        font-size: 13px;
+        line-height: 1.6;
+        color: #64748b;
+    }
+    
+
+    @media (max-width: 900px) {
+        .ringkasan {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .fitur-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+ 
+    @media (max-width: 550px) {
+        .ringkasan,
+        .fitur-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .welcome h1 {
+            font-size: 22px;
+        }
+    }
+
+    /* Tabel hasil analisis AI */
+    #isi-ai table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border: 1px solid #fbcfe8;
+        font-size: 14px;
+    }
+
+    #isi-ai th {
+        background: #2563eb;
+        color: white;
+        padding: 13px 15px;
+        text-align: left;
+        border: 1px solid #2563eb;
+    }
+
+    #isi-ai td {
+        padding: 12px 15px;
+        border: 1px solid #fbcfe8;
+        color: #334155;
+    }
+
+    #isi-ai tbody tr:nth-child(even) {
+        background: #fdf2f8;
+    }
+
+    #isi-ai tbody tr:hover {
+        background: #fce7f3;
+    }
+
+    #isi-ai h2,
+    #isi-ai h3 {
+        color: #be185d;
+        margin: 20px 0 12px;
+    }
+
+    #isi-ai p {
+        line-height: 1.8;
+        margin-bottom: 14px;
+    }
+
+    #isi-ai ul,
+    #isi-ai ol {
+        padding-left: 25px;
+        line-height: 1.8;
+        margin-bottom: 15px;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<!-- Sambutan Dashboard -->
+<div class="welcome">
+
+    <h1>Hallo Pencari Kos!!</h1>
+
+    <p>
+        Selamat datang di KosMadiun.
+        Temukan informasi kos, bandingkan harga,
+        dan dapatkan rekomendasi tempat tinggal
+        menggunakan teknologi Fuzzy Logic.
+    </p>
+
+</div>
+
+<!-- Ringkasan Data Kos -->
+<div class="ringkasan">
+
+    <div class="card">
+        <div class="ikon">🏠</div>
+        <h3>Jumlah Kos</h3>
+        <p class="angka">{{ jumlah_kos }} Unit</p>
+    </div>
+
+    <div class="card">
+        <div class="ikon">💰</div>
+        <h3>Rata-rata Harga</h3>
+        <p class="angka"><span class="rp">Rp</span> {{ rata_rata|floatformat:"0g" }}</p>
+    </div>
+
+    <div class="card">
+        <div class="ikon">📉</div>
+        <h3>Harga Termurah</h3>
+        <p class="angka"><span class="rp">Rp</span> {{ harga_termurah|floatformat:"0g" }}</p>
+    </div>
+
+    <div class="card">
+        <div class="ikon">📈</div>
+        <h3>Harga Termahal</h3>
+        <p class="angka"><span class="rp">Rp</span> {{ harga_termahal|floatformat:"0g" }}</p>
+    </div>
+
+</div>
+
+
+<!-- Grafik Perbandingan Harga Kos -->
+<div class="card" style="margin-bottom: 25px;">
+
+    <h2 style="font-size: 20px; margin-bottom: 15px;">
+        📊 Grafik Perbandingan Harga Kos
+    </h2>
+    
+    <p style="color: #64748b; margin-bottom: 15px;">
+        Grafik ini menunjukkan perbandingan harga dari seluruh kos
+        yang tersedia di database.
+    </p>
+
+    <img
+        src="data:image/png;base64,{{ grafik }}"
+        alt="Grafik Perbandingan Harga Kos"
+        style="width: 100%; height: auto; display: block;"
+    >
+
+
+<!-- Tombol Penjelasan AI -->
+<div style="margin-bottom: 25px;">
+
+    <button
+        onclick="jelaskanGrafik()"
+        style="
+            background: #db2777;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        "
+    >
+        ✨ Jelaskan Grafik dengan AI
+    </button>
+
+<div
+    id="hasil-ai"
+    style="
+        display: none;
+        background: #fdf2f8;
+        padding: 25px;
+        border-radius: 12px;
+        margin-top: 18px;
+        border: 1px solid #fbcfe8;
+        line-height: 1.8;
+        color: #334155;
+    "
+>
+    <h3 style="
+        color: #be185d;
+        margin-bottom: 15px;
+        font-size: 18px;
+    ">
+        ✨ Hasil Analisis AI
+    </h3>
+
+    <div id="isi-ai"></div>
+</div>
+
+</div>
+
+<!-- Fitur Utama -->
+<div class="fitur">
+
+    <h2>Jelajahi Fitur KosMadiun</h2>
+
+    <div class="fitur-grid">
+
+        <a href="#" class="fitur-card">
+            <div class="ikon">🏢</div>
+            <h3>Data Kos</h3>
+            <p>
+                Lihat informasi lengkap mengenai
+                daftar kos yang tersedia di Madiun.
+            </p>
+        </a>
+
+        <a href="#" class="fitur-card">
+            <div class="ikon">🔎</div>
+            <h3>Pencarian Kos</h3>
+            <p>
+                Cari kos berdasarkan harga,
+                jarak, dan rating yang diinginkan.
+            </p>
+        </a>
+
+        <a href="{% url 'rekomendasi' %}" class="fitur-card">
+            <div class="ikon">🧠</div>
+            <h3>Rekomendasi Fuzzy</h3>
+            <p>
+                Temukan kos yang sesuai berdasarkan
+                perhitungan Fuzzy Logic.
+            </p>
+        </a>
+
+        <a href="#" class="fitur-card">
+            <div class="ikon">📊</div>
+            <h3>Analisis Harga</h3>
+            <p>
+                Lihat grafik perbandingan harga
+                dan dapatkan penjelasan dari AI.
+            </p>
+        </a>
+
+        <a href="#" class="fitur-card">
+            <div class="ikon">📍</div>
+            <h3>Sebaran Kos</h3>
+            <p>
+                Lihat informasi persebaran lokasi
+                kos di wilayah Madiun.
+            </p>
+        </a>
+
+        <a href="#" class="fitur-card">
+            <div class="ikon">🤖</div>
+            <h3>Chatbot AI</h3>
+            <p>
+                Tanyakan informasi kos dan
+                dapatkan jawaban dari asisten AI.
+            </p>
+        </a>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+
+<script>
+    
+    async function jelaskanGrafik() {
+
+        const hasilAI = document.getElementById("hasil-ai");
+        const isiAI = document.getElementById("isi-ai");
+
+        // Menampilkan pesan proses
+       hasilAI.style.display = "block";
+       isiAI.innerHTML = "⏳ AI sedang menganalisis grafik...";
+
+        try {
+
+            // Mengirim permintaan ke Django
+            const response = await fetch("/jelaskan-grafik/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({})
+            });
+
+            // Mengambil jawaban AI
+            const data = await response.json();
+
+            // Menampilkan hasil penjelasan
+           isiAI.innerHTML = DOMPurify.sanitize(
+                 marked.parse(data.reply)
+            );
+        } catch (error) {
+
+            isiAI.innerHTML = "Terjadi kesalahan saat menghubungi AI.";
+
+            console.error(error);
+        }
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Sebaran Kos - KosMadiun{% endblock %}
+
+{% block extra_css %}
+<style>
+    .judul { margin-bottom: 20px; }
+    .judul h2 { color: #be185d; margin-bottom: 6px; }
+    .judul p { color: #64748b; }
+
+    .tabel-container {
+        background: white;
+        padding: 22px;
+        border-radius: 12px;
+        border: 1px solid #fbcfe8;
+        overflow-x: auto;
+    }
+
+    .tabel-container h4 { margin-bottom: 6px; }
+    .info { color: #64748b; margin-bottom: 10px; }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 550px;
+    }
+
+    th, td {
+        padding: 13px;
+        text-align: left;
+        border-bottom: 1px solid #fce7f3;
+    }
+
+    th { background: #eff6ff; color: #1e40af; }
+    tr:hover { background: #fff5fa; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="judul">
+    <h2>Sebaran Kos di Madiun</h2>
+    <p>Halaman untuk melihat informasi persebaran kos di Madiun.</p>
+</div>
+
+<div class="tabel-container">
+
+    <h4>Daftar Lokasi Kos</h4>
+    <p class="info">Jumlah data kos: {{ daftar_kos|length }}</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama Kos</th>
+                <th style="text-align: right;">Harga</th>
+                <th>Jarak (KM)</th>
+                <th>Rating</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for kos in daftar_kos %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ kos.nama }}</td>
+                <td class="harga">Rp {{ kos.harga|floatformat:"0g" }}</td>
+                <td>{{ kos.jarak_km }}</td>
+                <td>{{ kos.rating }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Belum ada data kos.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}
